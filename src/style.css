@@ -1,0 +1,346 @@
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+--bg: #0d1b2a;
+--surface: #1b3a5c;
+--border: #2e6fad;
+--text: #f0f4f8;
+--muted: #8baabb;
+--accent: #f4a623;
+--iniciante: #52a3e0;
+--cross: #f4a623;
+--duplo: #52c17e;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Nunito", sans-serif;
+    min-height: 100vh;
+}
+
+header {
+    text-align: center;
+    padding: 2.5rem 1rem 2rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.logo {
+    font-size: 3rem;
+    margin-bottom: 0.5rem
+}
+
+header h1 span {
+    color: var(--accent);
+}
+
+header p {
+    color: var(--muted);
+    font-size:  0.95rem;
+    margin-top: 0.5rem;
+}
+
+.stats-bar {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.stat-pill {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 0.4rem 1.2rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.stat-pill span {
+    color: var(--accent);
+    font-size: 1.1rem;
+    margin-left: 0.4rem;
+}
+
+.filter-bar {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    padding: 1.5rem;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+}
+
+.filter-bar span {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.filter-bar button {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 100px;
+    padding: 0.3rem 1rem;
+    font-size: 0.85rem;
+    font-family: "Nunito", sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-bar button.active {
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
+    color: #000 !important;
+    margin-left: auto;
+}
+.btn-novo:hover {
+    background: #ffc045 !important;
+}
+
+#lista-alunos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+    padding: 2rem 1.5rem;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.25rem;
+    transition: transform 0.25s;
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: 16px 16px 0 0;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}
+
+.card-nome {
+    font-size: 1rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+}
+
+.badge-curso {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 3px 10px;
+    margin-bottom: 0.75rem;
+}
+
+.card-info {
+    display: flex;
+    flex-direction: row;
+    gap: 0.35rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+}
+
+.card-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.btn-acao {
+    flex: 1;
+    padding: 0.4rem 0;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+    font-family: "Nunito", sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-acao:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.btn-acao.danger:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color:  #e05252;
+    color: #e05252;
+}
+
+.c-iniciante::before { background: var(--iniciante); }
+.c-cross::before     { background: var(--cross); }
+.c-duplo::before     { background: var(--duplo); }
+
+.badge-iniciante { background: rgba(82,163,224,0.18); color: var(--iniciante); }
+.badge-cross     { background: rgba(244,166,35,0.18);  color: var(--cross); }
+.badge-duplo     { background: rgba(82,193,126,0.18);  color: var(--duplo); }
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.overlay.open {
+  display: flex;
+}
+
+.modal {
+  background: #1a2e45;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+}
+
+.modal h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+  color: var(--accent);
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  color: var(--text);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+
+input, select, textarea {
+  width: 100%;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.6rem 0.9rem;
+  color: var(--text);
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent);
+}
+
+select option {
+  background: #1a2e45;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+.btn-salvar {
+  width: 100%;
+  margin-top: 1.25rem;
+  padding: 0.75rem;
+  background: var(--accent);
+  border: none;
+  border-radius: 12px;
+  color: #000;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-salvar:hover {
+  background: #ffc045;
+}
+
+#toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: #52c17e;
+    color: #000;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    z-index: 999;
+    opacity: 0;
+    transform: translateY(19px);
+    pointer-events: none;
+}
+
+#toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#toast.error {
+    background: #e05252;
+    color: #fff;
+}
+
+.empty {
+
+text-align: center;
+color: var(--muted);
+padding: 3rem;
+font-size: 1rem;
+grid-column: 1/-1;
+}
+
+
+
