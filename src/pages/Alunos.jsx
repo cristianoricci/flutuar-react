@@ -31,7 +31,10 @@ function Alunos() {
     : alunos.filter(aluno => aluno.curso === filtro);
   
   const adicionarAluno = (novoAluno) => {
-    const alunoComId = { ...novoAluno, id: Date.now() };
+    const proximoId = alunos.length > 0 
+    ? Math.max(...alunos.map(aluno => Number(aluno.id))) + 1 
+    : 1;
+    const alunoComId = { ...novoAluno, id: proximoId };
     setAlunos([...alunos, alunoComId]);
     setModalAberto(false);
   };
@@ -52,7 +55,12 @@ function Alunos() {
               <p>Curso: <strong>{aluno.curso}</strong></p>
               <p>Contato: {aluno.telefone}</p>
               <button 
-                onClick={() => navigate(`/alunos/${aluno.id}`)}
+
+                onClick={() => {
+  console.log("ID do aluno clicado:", aluno.id);
+  navigate(`/alunos/${aluno.id}`);
+}}
+               // onClick={() => navigate(`/alunos/${aluno.id}`)}
                 style={{
                   marginTop: '0.5rem',
                   padding: '0.5rem 1rem',

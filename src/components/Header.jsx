@@ -29,7 +29,7 @@ function Header() {
           textDecoration: 'none', 
           padding: '0.5rem 1rem', 
           borderRadius: '4px',
-          backgroundColor: verificarAtivo('/') // <-- Linha 33 que estava quebrando
+          backgroundColor: verificarAtivo('/') 
         }}>
           Dashboard
         </Link>

@@ -6,7 +6,6 @@ function FilterBar({ setFiltro, setModalAberto }) {
   const filtrar = (categoria) => {
     console.log("Filtrando por:" + categoria);
     
-  
     setFiltro(categoria); 
   };
 

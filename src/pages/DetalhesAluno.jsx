@@ -27,22 +27,33 @@ function DetalhesAluno() {
       <Header />
       
       <main style={{ padding: '2rem', color: '#fff', maxWidth: '600px', margin: '0 auto' }}>
-        {/* Botão Voltar usando o useNavigate */}
-        <button 
-          onClick={() => navigate('/alunos')} 
-          style={{
-            backgroundColor: 'transparent',
-            border: '1px solid #2e6fad',
-            color: '#2e6fad',
-            padding: '0.5rem 1rem',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontWeight: 'bold',
-            marginBottom: '2rem'
-          }}
-        >
-          ← Voltar para a Listagem
-        </button>
+      {/* Botão Voltar usando o useNavigate */}
+<button 
+  onClick={() => navigate('/alunos')} 
+  style={{
+    display: 'inline-flex',     
+    alignItems: 'center',       
+    backgroundColor: 'transparent',
+    border: '1px solid #2e6fad',
+    color: '#2e6fad',
+    padding: '0.6rem 1.2rem',   
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontWeight: 'bold',
+    marginBottom: '2rem',
+    fontSize: '1rem'            
+  }}
+>
+  
+  <span style={{ 
+    fontSize: '1.5rem',         
+    marginRight: '0.6rem',      
+    lineHeight: '0'             
+  }}>
+    ←
+  </span> 
+  Voltar para a Listagem
+</button>
 
         <div style={{ backgroundColor: 'rgba(255,255,255,0.05)', padding: '2rem', borderRadius: '12px', border: '1px solid #2e6fad' }}>
           <h1 style={{ borderBottom: '2px solid #2e6fad', paddingBottom: '0.5rem', marginBottom: '1.5rem' }}>
