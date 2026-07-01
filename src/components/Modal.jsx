@@ -4,27 +4,20 @@ function Modal({ isOpen, onClose, onSave }){
     const [nome, setNome] = useState('');
     const [curso, setCurso] = useState('Iniciante'); 
     const [telefone, setTelefone] = useState('');
-
-    
-    const formatarTelefone = (valor) => {
-        const apenasNumeros = valor.replace(/\D/g, '');
-
-        if (!apenasNumeros) return ''; 
-
-        if (apenasNumeros.length <= 2) {
-            return `(${apenasNumeros}`;
-        }
-        if (apenasNumeros.length <= 7) {
-            return `(${apenasNumeros.substring(0, 2)}) ${apenasNumeros.substring(2)}`;
-        }
-       
-        return `(${apenasNumeros.substring(0, 2)}) ${apenasNumeros.substring(2, 7)}-${apenasNumeros.substring(7, 11)}`;
-    };
+    const [erro, setErro] = useState('');
 
     const lidarComSalvar = (e) => {
         e.preventDefault(); 
+        setErro(''); 
         
-        if (!nome.trim()) return alert("Por favor, digite o nome do aluno.");
+        if (!nome.trim()) {
+            setErro("⚠️ Por favor, digite o nome do aluno.");
+            return;
+        }
+        if (!telefone.trim()) {
+            setErro("⚠️ Por favor, insira um telefone de contato.");
+            return;
+        }
 
         onSave({
             nome: nome,
@@ -32,10 +25,12 @@ function Modal({ isOpen, onClose, onSave }){
             telefone: telefone
         });
 
-       
+        alert("🎉 Aluno cadastrado com sucesso!");
+
         setNome('');
         setCurso('Iniciante');
         setTelefone('');
+        setErro('');
         onClose();
     };
 
@@ -46,9 +41,13 @@ function Modal({ isOpen, onClose, onSave }){
             <div className='modal'>
                 <h2>Cadastrar Novo Aluno</h2>
 
-                <form onSubmit={lidarComSalvar}>
+                {erro && (
+                    <div style={{ backgroundColor: '#ff4d4d', color: '#fff', padding: '0.5rem', borderRadius: '4px', marginBottom: '1rem', fontWeight: 'bold', fontSize: '0.9rem' }}>
+                        {erro}
+                    </div>
+                )}
 
-                    {/* Campo 1: Nome */}
+                <form onSubmit={lidarComSalvar}>
                     <div className='form-group'>
                         <label>Nome do Aluno</label>
                         <input 
@@ -59,7 +58,6 @@ function Modal({ isOpen, onClose, onSave }){
                         />
                     </div>
 
-                    {/* Campo 2: Curso */}
                     <div className='form-group'>
                         <label>Curso</label>
                         <select 
@@ -72,24 +70,23 @@ function Modal({ isOpen, onClose, onSave }){
                         </select>
                     </div>
 
-                    {/* Campo 3: Telefone (Único e Máscara ativa) */}
                     <div className='form-group'>
                         <label>Telefone / Contato</label>
                         <input 
                             type='text' 
                             placeholder='Ex: (35) 99999-8888'
-                            maxLength={15} 
                             value={telefone}
-                            onChange={(e) => setTelefone(formatarTelefone(e.target.value))} 
+                            onChange={(e) => setTelefone(e.target.value)} 
+                            autoComplete="new-password"
                         /> 
                     </div>
 
-                    <button type='submit' className='btn-salvar'>
+                    <button type='submit' className='btn-salvar' style={{ width: '100%', marginBottom: '0.5rem' }}>
                          Salvar Aluno
                     </button>
                 </form>
 
-                <button onClick={onClose} className='btn-cancelar'>
+                <button onClick={onClose}  className='btn-cancelar' title="Fechar janela sem salvar" style={{ width: '100%' }}>
                     Cancelar
                 </button>
             </div>

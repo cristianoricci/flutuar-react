@@ -17,11 +17,11 @@ function FilterBar({ setFiltro, setModalAberto }) {
   return (
     <div className="filter-bar">
       <span>Filtrar:</span>
-      <button onClick={() => filtrar('todos')}>Todos</button>
-      <button onClick={() => filtrar('Iniciante')}>Iniciante</button>
-      <button onClick={() => filtrar('Cross')}>Cross</button>
-      <button onClick={() => filtrar('Voo Duplo')}>Voo Duplo</button>
-      <button className="btn-novo" onClick={abrirModal}>+ Novo Aluno</button>
+      <button onClick={() => filtrar('todos')} title="Filtrar por todos os cursos">Todos</button>
+      <button onClick={() => filtrar('Iniciante')} title="Filtrar apenas alunos iniciantes">Iniciante</button>
+      <button onClick={() => filtrar('Cross')} title="Filtrar apenas os alunos de cross">Cross</button>
+      <button onClick={() => filtrar('Voo Duplo')} title="Filtrar apenas os alunos de voo duplo">Voo Duplo</button>
+      <button className="btn-novo" onClick={abrirModal} title="Cadastrar um novo aluno">+ Novo Aluno</button>
     </div>
   );
 }
