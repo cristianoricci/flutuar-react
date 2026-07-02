@@ -14,15 +14,25 @@ function Modal({ isOpen, onClose, onSave }){
             setErro("⚠️ Por favor, digite o nome do aluno.");
             return;
         }
+
+        // Remove os parênteses, espaços e hifens para contar apenas os números puros
+        const numerosApenas = telefone.replace(/\D/g, '');
+
         if (!telefone.trim()) {
             setErro("⚠️ Por favor, insira um telefone de contato.");
+            return;
+        }
+
+        // Validação: Verifica se tem menos de 10 dígitos (DDD + fixo) ou formato incorreto
+        if (numerosApenas.length < 10 || numerosApenas.length > 11) {
+            setErro("⚠️ O telefone deve conter o DDD válido e de 8 a 9 dígitos. Ex: (35) 99999-8888");
             return;
         }
 
         onSave({
             nome: nome,
             curso: curso,
-            telefone: telefone
+            telefone: telefone // Salva o telefone já formatado com a máscara
         });
 
         alert("🎉 Aluno cadastrado com sucesso!");
@@ -76,7 +86,19 @@ function Modal({ isOpen, onClose, onSave }){
                             type='text' 
                             placeholder='Ex: (35) 99999-8888'
                             value={telefone}
-                            onChange={(e) => setTelefone(e.target.value)} 
+                            maxLength={15} // Limita o tamanho máximo visual da máscara
+                            onChange={(e) => {
+                                // Remove tudo o que não for número (bloqueia letras na hora)
+                                let v = e.target.value.replace(/\D/g, "");
+                                
+                                // Aplica a máscara dinamicamente (XX) XXXXX-XXXX
+                                if (v.length <= 11) {
+                                    v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
+                                    v = v.replace(/(\d)(\d{4})$/g, "$1-$2");
+                                }
+                                
+                                setTelefone(v);
+                            }} 
                             autoComplete="new-password"
                         /> 
                     </div>
@@ -86,7 +108,7 @@ function Modal({ isOpen, onClose, onSave }){
                     </button>
                 </form>
 
-                <button onClick={onClose}  className='btn-cancelar' title="Fechar janela sem salvar" style={{ width: '100%' }}>
+                <button onClick={onClose} className='btn-cancelar' style={{ width: '100%' }}>
                     Cancelar
                 </button>
             </div>
