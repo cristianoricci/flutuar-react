@@ -10,10 +10,10 @@ function AlunoCard({aluno, onVerFicha}) {
     const classeCurso = cursoParaClasse[aluno.curso] || 'iniciante';
 
     return (
-        <div className={"card- c${classeCurso}"}>
+        <div className={`card c-${classeCurso}`}>
             <h3 className="card-nome">{aluno.nome}</h3>
 
-            <span className={"badge-curso badge-${classeCurso}"}>
+            <span className={`badge-curso badge-${classeCurso}`}>
                 {aluno.curso}
             </span>  
 

@@ -6,28 +6,51 @@ import FilterBar from '../components/FilterBar.jsx';
 import Modal from '../components/Modal.jsx';
 import AlunoCard from '../components/AlunoCard.jsx';
 
-const listaInicial = [
-  { id: 1, nome: "Mariana Santos", curso: "Iniciante", telefone: "35 9999-8888" },
-  { id: 2, nome: "Cristiano Alvarenga", curso: "Cross", telefone: "35 9888-7777" },
-  { id: 3, nome: "Rodrigo Melo", curso: "Voo Duplo", telefone: "11 9777-6666" }
-];
-
 function Alunos() {
-  const [alunos, setAlunos] = useState(() => {
-    const dadosSalvos = localStorage.getItem('alunos_flutuar');
-    return dadosSalvos ? JSON.parse(dadosSalvos) : listaInicial;
-  });
+  const [alunos, setAlunos] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erroCarregamento, setErroCarregamento] = useState(false);
 
   const [filtro, setFiltro] = useState('todos');
-  const [busca, setBusca] = useState(''); // NOVO ESTADO: Guarda o texto digitado na busca
+  const [busca, setBusca] = useState('');
   const [modalAberto, setModalAberto] = useState(false);
   const navigate = useNavigate();
 
+  // Carrega os dados uma única vez, quando o componente é montado
   useEffect(() => {
-    localStorage.setItem('alunos_flutuar', JSON.stringify(alunos));
-  }, [alunos]);
+    const dadosSalvos = localStorage.getItem('alunos_flutuar');
 
-  // FILTRAGEM DUPLA: Filtra por curso E por nome digitado ao mesmo tempo
+    if (dadosSalvos) {
+      // Já existe dado salvo localmente (ex: aluno cadastrado antes) -> usa direto
+      setAlunos(JSON.parse(dadosSalvos));
+      setCarregando(false);
+    } else {
+      // SIMULA UMA REQUISIÇÃO A UM SERVIDOR:
+      // em vez de um backend real, lemos um arquivo JSON estático
+      fetch('/data/alunos.json')
+        .then(resposta => resposta.json())
+        .then(dados => {
+          // setTimeout aqui simula o tempo de espera de uma rede real
+          setTimeout(() => {
+            setAlunos(dados);
+            setCarregando(false);
+          }, 800);
+        })
+        .catch(erro => {
+          console.error('Erro ao carregar alunos:', erro);
+          setErroCarregamento(true);
+          setCarregando(false);
+        });
+    }
+  }, []); // <-- array vazio: roda só uma vez, quando a página carrega
+
+  // Salva no localStorage sempre que a lista mudar (exceto durante o carregamento inicial)
+  useEffect(() => {
+    if (!carregando) {
+      localStorage.setItem('alunos_flutuar', JSON.stringify(alunos));
+    }
+  }, [alunos, carregando]);
+
   const alunosFiltrados = alunos.filter(aluno => {
     const matchesCurso = filtro === 'todos' || aluno.curso === filtro;
     const matchesBusca = aluno.nome.toLowerCase().includes(busca.toLowerCase());
@@ -52,7 +75,6 @@ function Alunos() {
       <main style={{ padding: '2rem' }}>
         <h2 style={{ color: '#fff', marginBottom: '1rem' }}>Lista de Alunos Registrados</h2>
 
-        {/* NOVO: Campo de Busca com Tooltip nativo (title) */}
         <div style={{ marginBottom: '1.5rem' }}>
           <input
             type="text"
@@ -73,8 +95,16 @@ function Alunos() {
           />
         </div>
 
-        {/* REQUISITO DE USABILIDADE: Mensagem condicional caso não encontre ninguém */}
-        {alunosFiltrados.length === 0 ? (
+        {/* ESTADO DE CARREGAMENTO */}
+        {carregando ? (
+          <div style={{ padding: '2rem', textAlign: 'center', color: '#aaa' }}>
+            <p>🪂 Carregando lista de pilotos...</p>
+          </div>
+        ) : erroCarregamento ? (
+          <div style={{ padding: '2rem', textAlign: 'center', color: '#ff8080' }}>
+            <p>⚠️ Erro ao carregar os dados. Tente novamente mais tarde.</p>
+          </div>
+        ) : alunosFiltrados.length === 0 ? (
           <div style={{ padding: '2rem', textAlign: 'center', backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '8px', border: '1px dashed #2e6fad' }}>
             <p style={{ color: '#aaa', fontSize: '1.2rem' }}>🪂 Nenhum piloto ou aluno encontrado com esses filtros.</p>
           </div>

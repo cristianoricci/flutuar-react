@@ -1,0 +1,5 @@
+[
+  { "id": 1, "nome": "Mariana Santos", "curso": "Iniciante", "telefone": "(35) 99999-8888" },
+  { "id": 2, "nome": "Cristiano Alvarenga", "curso": "Cross", "telefone": "(35) 98888-7777" },
+  { "id": 3, "nome": "Rodrigo Melo", "curso": "Voo Duplo", "telefone": "(11) 97777-6666" }
+]
