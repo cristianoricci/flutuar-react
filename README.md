@@ -24,11 +24,13 @@ O **Flutuar Parapente** é uma aplicação web de front-end desenvolvida como MV
 * **Ficha Cadastral Dinâmica (`/alunos/:id`):** Rota que recupera e exibe os dados detalhados do aluno selecionado utilizando o ID da URL.
 * **Persistência de Dados (Modo Autônomo):** Inclusão e leitura de dados salvos no cache do navegador (`localStorage`), mantendo os dados após o F5.
 * **Feedback ao Usuário:** Indicador de carregamento, mensagens de erro em formulários e aviso de "nenhum resultado encontrado" nos filtros.
-* **Página 404:** Rota de fallback para URLs inexistentes.
+**Página 404:** Rota de fallback para URLs inexistentes.
 
 ## 🔧 Como Executar o Projeto Localmente
 
-Certifique-se de ter o [Node.js](https://nodejs.org/) instalado em seu ambiente (desenvolvido e testado em ambiente Linux Debian).
+Certifi## 🔧 Como Executar o Projeto Localmente
+
+Certifique-se de ter o [Node.js](https://nodejs.org/) instalado em seu ambiente (recomendado: versão 20 ou superior — projeto desenvolvido e testado com Node v20.19.2, em ambiente Linux Debian).
 
 1. Clone o repositório para sua máquina local:
 ```bash
