@@ -1,4 +1,3 @@
-cat > README.md << 'EOF'
 # Flutuar Parapente - Gerenciador de Alunos (Front-End)
 
 O **Flutuar Parapente** é uma aplicação web de front-end desenvolvida como MVP para o curso de pós-graduação em Desenvolvimento Full Stack da PUC-Rio. O sistema foi projetado para gerenciar o fluxo de alunos e pilotos de uma escola de voo livre, permitindo o cadastro, a filtragem por nível de curso e o acompanhamento de métricas em tempo real.
@@ -18,17 +17,16 @@ O **Flutuar Parapente** é uma aplicação web de front-end desenvolvida como MV
 
 ## 📦 Funcionalidades Implementadas
 
-* **Dashboard/Painel Central:** Exibição de estatísticas dinâmicas baseadas na lista de alunos cadastrados.
+* **Dashboard/Painel Central:** Página inicial de boas-vindas com acesso rápido à navegação do sistema.
+* **Estatísticas em Tempo Real:** Painel de métricas (total de alunos, distribuição por curso) exibido na página "Gerenciar Alunos", atualizado dinamicamente conforme os dados são cadastrados ou filtrados.
 * **Listagem Responsiva:** Cards estilizados por categoria de curso (Iniciante, Cross Country e Voo Duplo) que se adaptam a qualquer tamanho de tela.
 * **Filtros e Busca:** Filtragem rápida de pilotos por categoria e por nome, sem recarregamento de página.
 * **Ficha Cadastral Dinâmica (`/alunos/:id`):** Rota que recupera e exibe os dados detalhados do aluno selecionado utilizando o ID da URL.
 * **Persistência de Dados (Modo Autônomo):** Inclusão e leitura de dados salvos no cache do navegador (`localStorage`), mantendo os dados após o F5.
 * **Feedback ao Usuário:** Indicador de carregamento, mensagens de erro em formulários e aviso de "nenhum resultado encontrado" nos filtros.
-**Página 404:** Rota de fallback para URLs inexistentes.
+* **Página 404:** Rota de fallback para URLs inexistentes.
 
 ## 🔧 Como Executar o Projeto Localmente
-
-Certifi## 🔧 Como Executar o Projeto Localmente
 
 Certifique-se de ter o [Node.js](https://nodejs.org/) instalado em seu ambiente (recomendado: versão 20 ou superior — projeto desenvolvido e testado com Node v20.19.2, em ambiente Linux Debian).
 
@@ -72,4 +70,3 @@ flutuar-react/
 ## 📄 Licença
 
 Este projeto foi desenvolvido para fins acadêmicos, como parte do MVP de Front-End Avançado da Pós-Graduação em Desenvolvimento Full Stack da PUC-Rio.
-EOF
