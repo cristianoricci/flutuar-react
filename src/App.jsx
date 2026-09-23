@@ -1,25 +1,47 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useParams, useNavigate } from 'react-router-dom';
 
 import Alunos from './pages/Alunos.jsx';
 import Header from './components/Header.jsx';
-
-// 1. LISTA DE DADOS COMPARTILHADA (Colocada aqui fora para ambas as telas terem acesso)
-const listaAlunosGlobal = [
-  { id: 1, nome: "Mariana Santos", curso: "Iniciante", telefone: "35 9999-8888" },
-  { id: 2, nome: "Cristiano Alvarenga", curso: "Cross", telefone: "35 9888-7777" },
-  { id: 3, nome: "Rodrigo Melo", curso: "Voo Duplo", telefone: "11 9777-6666" }
-];
+import PainelClima from './components/PainelClima.jsx';
 
 function DetalhesAluno() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [aluno, setAluno] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [erro, setErro] = useState(false);
 
-  const dadosSalvos = localStorage.getItem('alunos_flutuar');
-  const alunosReais = dadosSalvos ? JSON.parse(dadosSalvos) : listaAlunosGlobal;
-  const alunoEncontrado = alunosReais.find(aluno => aluno.id === Number(id));
+  useEffect(() => {
+    // Ajustado para bater exatamente com a rota @app.route('/aluno/<int:aluno_id>') do seu app.py
+    fetch(`http://localhost:5000/aluno/${id}`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Aluno não encontrado');
+        return res.json();
+      })
+      .then((data) => {
+        setAluno(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Erro ao carregar ficha:", err);
+        setErro(true);
+        setLoading(false);
+      });
+  }, [id]);
 
-  if (!alunoEncontrado) {
+  if (loading) {
+    return (
+      <div className="app-container">
+        <Header />
+        <div style={{ color: '#fff', padding: '2rem', textAlign: 'center' }}>
+          <h2>Carregando ficha do piloto...</h2>
+        </div>
+      </div>
+    );
+  }
+
+  if (erro || !aluno) {
     return (
       <div className="app-container">
         <Header />
@@ -40,7 +62,6 @@ function DetalhesAluno() {
     <div className="app-container">
       <Header />
       <div style={{ color: '#fff', padding: '2rem', backgroundColor: '#1a1a1a', minHeight: '80vh' }}>
-        
         <button 
           onClick={() => navigate('/alunos')} 
           style={{
@@ -58,15 +79,17 @@ function DetalhesAluno() {
         </button>
 
         <h2>Ficha Cadastral do Piloto</h2>
-        <h1 style={{ color: '#2e6fad', margin: '1rem 0' }}>{alunoEncontrado.nome}</h1>
+        <h1 style={{ color: '#2e6fad', margin: '1rem 0' }}>{aluno.nome}</h1>
         
         <div style={{ border: '1px solid #333', padding: '1.5rem', borderRadius: '8px', background: '#222' }}>
-          <p><strong>Curso Matriculado:</strong> {alunoEncontrado.curso}</p>
-          <p><strong>Telefone de Contato:</strong> {alunoEncontrado.telefone}</p>
-          <p><strong>ID do Sistema:</strong> {id}</p>
+          <p><strong>Curso Matriculado:</strong> {aluno.curso}</p>
+          <p><strong>Telefone de Contato:</strong> {aluno.telefone}</p>
+          <p><strong>E-mail:</strong> {aluno.email}</p>
+          <p><strong>Nível IPPI:</strong> {aluno.nivel_ippi || 'Não informado'}</p>
+          <p><strong>ID do Sistema:</strong> {aluno.id}</p>
           <hr style={{ borderColor: '#333', margin: '1rem 0' }} />
-          <p><strong>Status do Seguro CBVL:</strong> Ativo ✓</p>
-          <p><strong>Localidade Base:</strong> Poços de Caldas, MG</p>
+          <p><strong>Observações:</strong> {aluno.observacoes || 'Sem observações cadastradas'}</p>
+          <p><strong>Data de Cadastro:</strong> {aluno.data_cadastro}</p>
         </div>
       </div>
     </div>
@@ -77,10 +100,12 @@ function Dashboard() {
   return (
     <div className="app-container">
       <Header />
-      <div style={{ color: '#fff', padding: '2rem' }}>
-        <h1>✈️ Dashboard Flutuar</h1>
-        <p>Bem-vindo ao painel de controle de Voo Livre.</p>
-      </div>
+      <main style={{ color: '#fff', padding: '2rem', maxWidth: '1000px', margin: '0 auto' }}>
+        <h1 style={{ marginBottom: '0.5rem' }}>✈️ Dashboard Flutuar</h1>
+        <p style={{ color: '#aaa', marginBottom: '2rem' }}>Bem-vindo ao painel de controle de Voo Livre.</p>
+        
+        <PainelClima cidadeInicial="Rio de Janeiro" />
+      </main>
     </div>
   );
 }

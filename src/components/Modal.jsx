@@ -1,119 +1,181 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-function Modal({ isOpen, onClose, onSave }){
-    const [nome, setNome] = useState('');
-    const [curso, setCurso] = useState('Iniciante'); 
-    const [telefone, setTelefone] = useState('');
-    const [erro, setErro] = useState('');
+function Modal({ isOpen, onClose, onSave, alunoParaEditar }) {
+  // 1. Estados dos campos do formulário
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
+  const [telefone, setTelefone] = useState('');
+  const [curso, setCurso] = useState('Iniciante');
 
-    const lidarComSalvar = (e) => {
-        e.preventDefault(); 
-        setErro(''); 
-        
-        if (!nome.trim()) {
-            setErro("⚠️ Por favor, digite o nome do aluno.");
-            return;
-        }
+  // 2. Preenche os campos se estiver em modo de edição, ou limpa se for novo cadastro
+  useEffect(() => {
+    if (alunoParaEditar) {
+      setNome(alunoParaEditar.nome || '');
+      setEmail(alunoParaEditar.email || '');
+      setTelefone(alunoParaEditar.telefone || '');
+      setCurso(alunoParaEditar.curso || 'Iniciante');
+    } else {
+      setNome('');
+      setEmail('');
+      setTelefone('');
+      setCurso('Iniciante');
+    }
+  }, [alunoParaEditar, isOpen]);
 
-        // Remove os parênteses, espaços e hifens para contar apenas os números puros
-        const numerosApenas = telefone.replace(/\D/g, '');
+  if (!isOpen) return null;
 
-        if (!telefone.trim()) {
-            setErro("⚠️ Por favor, insira um telefone de contato.");
-            return;
-        }
+  // 3. Envio do formulário
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-        // Validação: Verifica se tem menos de 10 dígitos (DDD + fixo) ou formato incorreto
-        if (numerosApenas.length < 10 || numerosApenas.length > 11) {
-            setErro("⚠️ O telefone deve conter o DDD válido e de 8 a 9 dígitos. Ex: (35) 99999-8888");
-            return;
-        }
-
-        onSave({
-            nome: nome,
-            curso: curso,
-            telefone: telefone // Salva o telefone já formatado com a máscara
-        });
-
-        alert("🎉 Aluno cadastrado com sucesso!");
-
-        setNome('');
-        setCurso('Iniciante');
-        setTelefone('');
-        setErro('');
-        onClose();
+    // Monta o objeto. Se estiver editando, preserva o ID original!
+    const dadosAluno = {
+      ...(alunoParaEditar && { id: alunoParaEditar.id }),
+      nome,
+      email,
+      telefone,
+      curso,
     };
 
-    if (!isOpen) return null;
+    onSave(dadosAluno);
+  };
 
-    return (
-        <div className='overlay open'>
-            <div className='modal'>
-                <h2>Cadastrar Novo Aluno</h2>
+  return (
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 1000
+    }}>
+      <div style={{
+        backgroundColor: '#1a1a1a',
+        padding: '2rem',
+        borderRadius: '8px',
+        width: '90%',
+        maxWidth: '500px',
+        color: '#fff',
+        border: '1px solid #333'
+      }}>
+        {/* Título dinâmico */}
+        <h2 style={{ marginTop: 0, color: '#2e6fad' }}>
+          {alunoParaEditar ? '✏️ Editar Piloto' : '🪂 Cadastrar Novo Piloto'}
+        </h2>
 
-                {erro && (
-                    <div style={{ backgroundColor: '#ff4d4d', color: '#fff', padding: '0.5rem', borderRadius: '4px', marginBottom: '1rem', fontWeight: 'bold', fontSize: '0.9rem' }}>
-                        {erro}
-                    </div>
-                )}
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.9rem' }}>Nome Completo:</label>
+            <input
+              type="text"
+              required
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '0.6rem',
+                borderRadius: '4px',
+                border: '1px solid #444',
+                backgroundColor: '#222',
+                color: '#fff'
+              }}
+            />
+          </div>
 
-                <form onSubmit={lidarComSalvar}>
-                    <div className='form-group'>
-                        <label>Nome do Aluno</label>
-                        <input 
-                            type="text" 
-                            placeholder='Ex: João Silva' 
-                            value={nome}
-                            onChange={(e) => setNome(e.target.value)}
-                        />
-                    </div>
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.9rem' }}>E-mail:</label>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '0.6rem',
+                borderRadius: '4px',
+                border: '1px solid #444',
+                backgroundColor: '#222',
+                color: '#fff'
+              }}
+            />
+          </div>
 
-                    <div className='form-group'>
-                        <label>Curso</label>
-                        <select 
-                            value={curso}
-                            onChange={(e) => setCurso(e.target.value)}
-                        >
-                            <option value='Iniciante'>Iniciante</option>
-                            <option value='Cross'>Cross</option>
-                            <option value='Voo Duplo'>Voo Duplo</option>
-                        </select>
-                    </div>
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.9rem' }}>Telefone:</label>
+            <input
+              type="text"
+              required
+              value={telefone}
+              onChange={(e) => setTelefone(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '0.6rem',
+                borderRadius: '4px',
+                border: '1px solid #444',
+                backgroundColor: '#222',
+                color: '#fff'
+              }}
+            />
+          </div>
 
-                    <div className='form-group'>
-                        <label>Telefone / Contato</label>
-                        <input 
-                            type='text' 
-                            placeholder='Ex: (35) 99999-8888'
-                            value={telefone}
-                            maxLength={15} // Limita o tamanho máximo visual da máscara
-                            onChange={(e) => {
-                                // Remove tudo o que não for número (bloqueia letras na hora)
-                                let v = e.target.value.replace(/\D/g, "");
-                                
-                                // Aplica a máscara dinamicamente (XX) XXXXX-XXXX
-                                if (v.length <= 11) {
-                                    v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
-                                    v = v.replace(/(\d)(\d{4})$/g, "$1-$2");
-                                }
-                                
-                                setTelefone(v);
-                            }} 
-                            autoComplete="new-password"
-                        /> 
-                    </div>
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.9rem' }}>Curso / Categoria:</label>
+            <select
+              value={curso}
+              onChange={(e) => setCurso(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '0.6rem',
+                borderRadius: '4px',
+                border: '1px solid #444',
+                backgroundColor: '#222',
+                color: '#fff'
+              }}
+            >
+              <option value="Iniciante">Iniciante</option>
+              <option value="Cross">Cross</option>
+              <option value="Voo Duplo">Voo Duplo</option>
+            </select>
+          </div>
 
-                    <button type='submit' className='btn-salvar' style={{ width: '100%', marginBottom: '0.5rem' }}>
-                         Salvar Aluno
-                    </button>
-                </form>
-
-                <button onClick={onClose} className='btn-cancelar' style={{ width: '100%' }}>
-                    Cancelar
-                </button>
-            </div>
-        </div>
-    );
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
+            <button
+              type="button"
+              onClick={onClose}
+              style={{
+                padding: '0.6rem 1.2rem',
+                backgroundColor: '#555',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              style={{
+                padding: '0.6rem 1.2rem',
+                backgroundColor: '#2e6fad',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontWeight: 'bold'
+              }}
+            >
+              {alunoParaEditar ? 'Salvar Alterações' : 'Cadastrar'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 }
 
 export default Modal;
